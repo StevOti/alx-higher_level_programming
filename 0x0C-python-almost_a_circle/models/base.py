@@ -36,7 +36,7 @@ class Base:
         Args:
             list_dictionaries (list): A list of dictionaries.
         """
-        if not list_dictionaries:
+        if list_dictionaries is None or list_dictionaries == []:
             return "[]"
         return json.dumps(list_dictionaries)
 
@@ -47,9 +47,9 @@ class Base:
         Args:
             list_objs (list): A list of inherited Base instances.
         """
-        filename = "{}.json".format(cls.__name__)
+        filename = cls.__name__ + ".json"
         with open(filename, "w") as jsonfile:
-            if not list_objs:
+            if list_objs is None:
                 jsonfile.write("[]")
             else:
                 list_dicts = [o.to_dictionary() for o in list_objs]
@@ -65,7 +65,7 @@ class Base:
             If json_string is None or empty - an empty list.
             Otherwise - the Python list represented by json_string.
         """
-        if not json_string or json_string == "[]":
+        if json_string is None or json_string == "[]":
             return []
         return json.loads(json_string)
 
@@ -94,7 +94,7 @@ class Base:
             If the file does not exist - an empty list.
             Otherwise - a list of instantiated classes.
         """
-        filename = "{}.json".format(cls.__name__)
+        filename = str(cls.__name__) + ".json"
         try:
             with open(filename, "r") as jsonfile:
                 list_dicts = Base.from_json_string(jsonfile.read())
@@ -109,12 +109,15 @@ class Base:
         Args:
             list_objs (list): A list of inherited Base instances.
         """
-        filename = "{}.csv".format(cls.__name__)
+        filename = cls.__name__ + ".csv"
         with open(filename, "w", newline="") as csvfile:
-            if not list_objs:
+            if list_objs is None or list_objs == []:
                 csvfile.write("[]")
             else:
-                fieldnames = cls.get_fieldnames()
+                if cls.__name__ == "Rectangle":
+                    fieldnames = ["id", "width", "height", "x", "y"]
+                else:
+                    fieldnames = ["id", "size", "x", "y"]
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 for obj in list_objs:
                     writer.writerow(obj.to_dictionary())
@@ -129,10 +132,13 @@ class Base:
             If the file does not exist - an empty list.
             Otherwise - a list of instantiated classes.
         """
-        filename = "{}.csv".format(cls.__name__)
+        filename = cls.__name__ + ".csv"
         try:
             with open(filename, "r", newline="") as csvfile:
-                fieldnames = cls.get_fieldnames()
+                if cls.__name__ == "Rectangle":
+                    fieldnames = ["id", "width", "height", "x", "y"]
+                else:
+                    fieldnames = ["id", "size", "x", "y"]
                 list_dicts = csv.DictReader(csvfile, fieldnames=fieldnames)
                 list_dicts = [dict([k, int(v)] for k, v in d.items())
                               for d in list_dicts]
@@ -159,7 +165,24 @@ class Base:
             turt.up()
             turt.goto(rect.x, rect.y)
             turt.down()
-            for _ in range(2):
+            for i in range(2):
                 turt.forward(rect.width)
                 turt.left(90)
-                turt
+                turt.forward(rect.height)
+                turt.left(90)
+            turt.hideturtle()
+
+        turt.color("#b5e3d8")
+        for sq in list_squares:
+            turt.showturtle()
+            turt.up()
+            turt.goto(sq.x, sq.y)
+            turt.down()
+            for i in range(2):
+                turt.forward(sq.width)
+                turt.left(90)
+                turt.forward(sq.height)
+                turt.left(90)
+            turt.hideturtle()
+
+        turtle.exitonclick()

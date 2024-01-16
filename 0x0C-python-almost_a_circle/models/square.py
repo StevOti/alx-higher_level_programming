@@ -2,6 +2,7 @@
 """Defines a square class."""
 from models.rectangle import Rectangle
 
+
 class Square(Rectangle):
     """Square class that inherits from Rectangle."""
 
@@ -23,15 +24,20 @@ class Square(Rectangle):
     def update(self, *args, **kwargs):
         """Assign attributes to id, size, x, and y attributes."""
         if args:
-            # If *args exists and is not empty, update attributes based on their order
-            if len(args) >= 1:
-                self.id = args[0]
-            if len(args) >= 2:
-                self.size = args[1]
-            if len(args) >= 3:
-                self.x = args[2]
-            if len(args) >= 4:
-                self.y = args[3]
+            a = 0
+            for arg in args:
+                if a == 0:
+                    if arg is None:
+                        self.__init__(self.size, self.x, self.y)
+                    else:
+                        self.id = arg
+                elif a == 1:
+                    self.size = arg
+                elif a == 2:
+                    self.x = arg
+                elif a == 3:
+                    self.y = arg
+                a += 1
         else:
             # If *args doesn't exist or is empty, update attributes based on **kwargs
             for key, value in kwargs.items():

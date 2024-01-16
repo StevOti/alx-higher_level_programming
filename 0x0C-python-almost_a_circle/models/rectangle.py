@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Defines a rectangle class."""
 from models.base import Base
-import json
+
 
 class Rectangle(Base):
     """Rectangle class that inherits from Base."""
@@ -74,6 +74,10 @@ class Rectangle(Base):
 
     def display(self):
         """Print the Rectangle instance using the character #, considering x and y."""
+        if self.width == 0 or self.height == 0:
+            print()
+            return
+
         for _ in range(self.y):
             print()
         for _ in range(self.height):
@@ -101,6 +105,9 @@ class Rectangle(Base):
             # If *args doesn't exist or is empty, update attributes based on **kwargs
             for key, value in kwargs.items():
                 setattr(self, key, value)
+                if key == "id" and value is None:
+                    # Reset attributes to default if id is None
+                    self.__init__(self.width, self.height, self.x, self.y)
 
     def to_dictionary(self):
         """Return the dictionary representation of a Rectangle."""
@@ -111,10 +118,3 @@ class Rectangle(Base):
             'x': self.x,
             'y': self.y
         }
-
-    @staticmethod
-    def from_json_string(json_string):
-        """Return the list represented by json_string."""
-        if json_string is None or not json_string:
-            return []
-        return json.loads(json_string)

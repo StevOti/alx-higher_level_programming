@@ -1,4 +1,3 @@
-0-javascript_is_amazing.js
 #!/usr/bin/node
 if (process.argv.length === 2) {
   console.log('No argument');

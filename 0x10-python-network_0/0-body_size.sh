@@ -1,23 +1,12 @@
 #!/bin/bash
 
-# 0-body_size.sh
-#
-# Takes in a URL, sends a request to that URL, and displays the size of the body of the response in bytes.
-#
+# This script takes a URL as input, sends a request to that URL, and displays the size of the body of the response in bytes.
 
-url="$1"
-
-if [[ -z "$url" ]]; then
-  echo "Usage: $0 <URL>"
-  exit 1
+# Check if URL argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <URL>"
+    exit 1
 fi
 
-size=$(curl -s -o /dev/null -w "%{size_download}" "$url")
-
-if [[ "$size" == "0" ]]; then
-  echo "Size of the body of the response in bytes: 0"
-else
-  echo "Size of the body of the response in bytes: $size"
-fi
-
-exit 0
+# Send a HEAD request to the URL and print the size of the response body in bytes
+curl -sI "$1" | grep -i "content-length:" | cut -d " " -f2
